@@ -92,3 +92,19 @@ class FolderSynchronizer:
             f.write(log_entry)
 
         #print(log_entry, end=' ')
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Folder Synchronization Utility")
+    parser.add_argument("source", help="Path to the source folder")
+    parser.add_argument("replica", help="Path to the replica folder")
+    parser.add_argument("log_file", help="Path to the log file")
+    parser.add_argument("-i", "--interval", type=int, default=60, help="Synchronization interval (seconds)")
+    args = parser.parse_args()
+
+    synchronizer = FolderSynchronizer(args.source, args.replica, args.log_file, args.interval)
+    while True:
+        synchronizer.synchronize()
+        print("Synchronization is running..")
+        os.system('cls')
+        time.sleep(args.interval)
