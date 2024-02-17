@@ -1,5 +1,6 @@
 import os
 import shutil
+import hashlib
 from typing import List, Set
 
 
@@ -9,7 +10,12 @@ class FileHandler:
 
     def calculate_hash(self) -> str:
         # Calculate hash of file
-        pass
+        md5_hash = hashlib.md5()
+        with open(self.filepath, 'rb') as f:
+            for part in iter(lambda: f.read(4096), b''):
+                md5_hash.update(part)
+
+        return md5_hash.hexdigest()
 
     def copy(self, destination: str) -> None:
         shutil.copy2(self.filename, destination)
