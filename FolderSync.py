@@ -68,9 +68,15 @@ class FolderSynchronizer:
                 file.delete()
                 self.log(f'Deleted: {file.filename} from {self.replica_folder}')
 
+    def handle_modified_files(self, source_files: List[FileHandler]) -> None:
         # compare hash of files, if not same overwrite file in replica
         pass
+        for source_file in source_files:
 
     def log(self, message):
+                if source_file.calculate_hash() != replica_file.calculate_hash():
+                    source_file.copy(replica_file_path)
+                    self.log(f'Updated: {replica_file_path}')
+
         # log changes in logfile
         pass
