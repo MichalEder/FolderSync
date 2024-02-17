@@ -7,8 +7,9 @@ from typing import List, Set
 
 
 class FileHandler:
-    def __init__(self, filename: str) -> None:
-        self.filename = filename
+    def __init__(self, filepath: str) -> None:
+        self.filename = (os.path.basename(filepath).split('/')[-1])
+        self.filepath = filepath
 
     def calculate_hash(self) -> str:
         # Calculate hash of file
@@ -20,10 +21,10 @@ class FileHandler:
         return md5_hash.hexdigest()
 
     def copy(self, destination: str) -> None:
-        shutil.copy2(self.filename, destination)
+        shutil.copy2(self.filepath, destination)
 
     def delete(self):
-        os.remove(self.filename)
+        os.remove(self.filepath)
 
 
 class FolderSynchronizer:
@@ -41,22 +42,19 @@ class FolderSynchronizer:
         # Handle new/modified/deleted files
         self.handle_new_files(source_files, replica_files)
         self.handle_deleted_files(source_files, replica_files)
-        self.handle_modified_files(source_files, replica_files)
-
+        self.handle_modified_files(source_files)
 
     def get_file_list(self, folder: str) -> List[FileHandler]:
         # return list of files in folder
         files: List[FileHandler] = []
         for filename in os.listdir(folder):
-            full_path = os.path.join(folder, filename)
-            if os.path.isfile(full_path):
-                files.append(FileHandler(full_path))
+            file_path = os.path.join(folder, filename)
+            if os.path.isfile(file_path):
+                files.append(FileHandler(file_path))
         return files
-
 
     def handle_new_files(self, source_files: List[FileHandler], replica_files: List[FileHandler]) -> None:
         # check existence of file from source in replica
-        # source_filenames: Set[str] = {file_obj.filename for file_obj in source_files}
         replica_filenames: Set[str] = {file_obj.filename for file_obj in replica_files}
 
         for file in source_files:
@@ -68,9 +66,7 @@ class FolderSynchronizer:
     def handle_deleted_files(self, source_files: List[FileHandler], replica_files: List[FileHandler]) -> None:
         # check existence of file in replica
         source_filenames: Set[str] = {file_obj.filename for file_obj in source_files}
-        # replica_filenames: Set[str] = {file_obj.filename for file_obj in replica_files}
 
-    def handle_modified_files(self, source_files, replica_files):
         for file in replica_files:
             if file.filename not in source_filenames:
                 file.delete()
@@ -83,10 +79,16 @@ class FolderSynchronizer:
             if os.path.exists(replica_file_path):
                 replica_file = FileHandler(replica_file_path)
 
-    def log(self, message):
                 if source_file.calculate_hash() != replica_file.calculate_hash():
                     source_file.copy(replica_file_path)
                     self.log(f'Updated: {replica_file_path}')
 
+    def log(self, message: str):
         # log changes in logfile
         pass
+        timestamp: str = time.strftime('%Y-%m-%dT%H:%M:%S')
+        log_entry: str = f'{timestamp}  {message}\n'
+        with open(self.log_file, 'a') as f:
+            f.write(log_entry)
+
+        #print(log_entry, end=' ')
