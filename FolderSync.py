@@ -1,3 +1,6 @@
+import os
+
+
 class FileHandler:
     def __init__(self, filename):
         self.filename = filename
@@ -21,7 +24,13 @@ class FolderSynchronizer:
 
     def get_file_list(self, folder):
         # return list of files in folder
-        pass
+        files = []
+        for filename in os.listdir(folder):
+            full_path = os.path.join(folder, filename)
+            if os.path.isfile(full_path):
+                files.append(FileHandler(full_path))
+        return files
+
 
     def handle_new_files(self, source_files, replica_files):
         # check existence of file from source in replica if not present copy file
