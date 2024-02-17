@@ -14,6 +14,9 @@ class FileHandler:
     def copy(self, destination: str) -> None:
         shutil.copy2(self.filename, destination)
 
+    def delete(self):
+        os.remove(self.filename)
+
 
 class FolderSynchronizer:
     def __init__(self, source_folder: str, replica_folder: str, log_file: str, interval: int):
@@ -24,8 +27,6 @@ class FolderSynchronizer:
 
     def synchronize(self) -> None:
         # Define source and replica files with file list of replica and source folder
-        source_files = self.get_file_list(self.source_folder)
-        replica_files = self.get_file_list(self.replica_folder)
         source_files: List[FileHandler] = self.get_file_list(self.source_folder)
         replica_files: List[FileHandler] = self.get_file_list(self.replica_folder)
 
@@ -56,11 +57,17 @@ class FolderSynchronizer:
                 file.copy(replica_destination)
                 self.log(f'Copied: {file.filename} to {replica_destination}')
 
-    def handle_deleted_files(self, source_files, replica_files):
+    def handle_deleted_files(self, source_files: List[FileHandler], replica_files: List[FileHandler]) -> None:
         # check existence of file in replica
-        pass
+        source_filenames: Set[str] = {file_obj.filename for file_obj in source_files}
+        # replica_filenames: Set[str] = {file_obj.filename for file_obj in replica_files}
 
     def handle_modified_files(self, source_files, replica_files):
+        for file in replica_files:
+            if file.filename not in source_filenames:
+                file.delete()
+                self.log(f'Deleted: {file.filename} from {self.replica_folder}')
+
         # compare hash of files, if not same overwrite file in replica
         pass
 
