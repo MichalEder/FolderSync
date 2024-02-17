@@ -19,8 +19,14 @@ class FolderSynchronizer:
 
     def synchronize(self):
         # Define source and replica files with file list of replica and source folder
+        source_files = self.get_file_list(self.source_folder)
+        replica_files = self.get_file_list(self.replica_folder)
+
         # Handle new/modified/deleted files
-        pass
+        self.handle_new_files(source_files, replica_files)
+        self.handle_deleted_files(source_files, replica_files)
+        self.handle_modified_files(source_files, replica_files)
+
 
     def get_file_list(self, folder):
         # return list of files in folder
