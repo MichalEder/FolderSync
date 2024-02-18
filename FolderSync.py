@@ -34,7 +34,6 @@ class ItemHandler:
             with open(self.item_full_path, 'rb') as f:
                 for chunk in iter(lambda: f.read(4096), b''):
                     md5_hash.update(chunk)
-
             return md5_hash.hexdigest()
 
         except (IOError, OSError) as e:
