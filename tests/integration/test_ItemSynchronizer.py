@@ -42,6 +42,7 @@ class TestItemSynchronizer(unittest.TestCase):
         replica_dir = os.path.join(self.temp_replica, 'test_dir\\test_dir1')
         self.assertTrue(os.path.exists(replica_dir))  # Asserting directory existence
         self.assertTrue(os.path.isdir(replica_dir))
+
     def test_file_modification_sync(self):
         source_file = os.path.join(self.temp_source, 'test.txt')
         replica_file = os.path.join(self.temp_replica, 'test.txt')
@@ -57,3 +58,21 @@ class TestItemSynchronizer(unittest.TestCase):
         with open(replica_file, 'r') as f:
             updated_content = f.read()
         self.assertEqual(updated_content, "Updated content")
+
+    def test_file_deletion_sync(self):
+        source_file = os.path.join(self.temp_source, 'test.txt')
+        replica_file = os.path.join(self.temp_replica, 'test.txt')
+
+        # Initial setup and sync
+        with open(source_file, 'w') as f:
+            f.write("Initial content")
+        self.synchronizer.synchronize()
+
+        os.remove(source_file)
+        self.synchronizer.synchronize()
+
+        self.assertFalse(os.path.exists(replica_file))
+
+
+if __name__ == '__main__':
+    unittest.main()
