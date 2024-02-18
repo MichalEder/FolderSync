@@ -1,7 +1,11 @@
 import unittest
 import tempfile
 import shutil
+import hashlib
 import os
+from FolderSync import ItemSynchronizer, ItemHandler
+
+
 class TestItemHandler(unittest.TestCase):
     def setUp(self):
         self.temp_source = tempfile.mkdtemp()
@@ -11,6 +15,7 @@ class TestItemHandler(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.temp_source)
         shutil.rmtree(self.temp_replica)
+
     def test_new_file_creation(self):
         test_file = os.path.join(self.temp_source, "test.txt")
         with open(test_file, "w") as f:
@@ -20,6 +25,7 @@ class TestItemHandler(unittest.TestCase):
 
         replica_file = os.path.join(self.temp_replica, "test.txt")
         self.assertTrue(os.path.exists(replica_file))
+
     def test_calculate_hash(self):
         temp_file = tempfile.NamedTemporaryFile(delete=False)
         temp_file.write(b"This is some test data")
@@ -36,3 +42,20 @@ class TestItemHandler(unittest.TestCase):
         self.assertEqual(calculated_hash, expected_hash)
 
         os.unlink(temp_file.name)
+    def test_file_modification(self):
+        test_file = os.path.join(self.temp_source, "test.txt")
+        replica_file = os.path.join(self.temp_replica, "test.txt")
+
+        with open(test_file, "w") as f:
+            f.write("Initial content")
+        shutil.copy(test_file, replica_file)
+
+        with open(test_file, "w") as f:
+            f.write("Updated content")
+
+        self.synchronizer.synchronize()
+
+        source_hash = self.synchronizer.get_item_list(self.temp_source)[0].calculate_hash()
+        replica_hash = self.synchronizer.get_item_list(self.temp_replica)[0].calculate_hash()
+        self.assertEqual(source_hash, replica_hash)
+
