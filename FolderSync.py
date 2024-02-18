@@ -229,7 +229,7 @@ if __name__ == "__main__":
     synchronizer = ItemSynchronizer(args.source, args.replica, args.log_file, args.interval)
 
     while True:
+        os.system('cls')
         synchronizer.synchronize()
         print("Synchronization is running..")
-        os.system('cls')
         time.sleep(args.interval)
