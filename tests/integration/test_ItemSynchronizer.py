@@ -33,3 +33,12 @@ class TestItemSynchronizer(unittest.TestCase):
         replica_file = os.path.join(self.temp_replica, 'test.txt')
         self.assertTrue(os.path.exists(replica_file))
 
+    def test_new_directory_sync(self):
+        source_dir = os.path.join(self.temp_source, 'test_dir\\test_dir1')
+        os.makedirs(source_dir)
+
+        self.synchronizer.synchronize()
+
+        replica_dir = os.path.join(self.temp_replica, 'test_dir\\test_dir1')
+        self.assertTrue(os.path.exists(replica_dir))  # Asserting directory existence
+        self.assertTrue(os.path.isdir(replica_dir))
