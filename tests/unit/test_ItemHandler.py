@@ -72,3 +72,13 @@ class TestItemHandler(unittest.TestCase):
         self.synchronizer.synchronize()
 
         self.assertFalse(os.path.exists(replica_file))
+    def test_directory_creation(self):
+        test_dir = os.path.join(self.temp_source, "new_dir")
+        replica_dir = os.path.join(self.temp_replica, "new_dir")
+
+        os.mkdir(test_dir)
+
+        self.synchronizer.synchronize()
+
+        self.assertTrue(os.path.exists(replica_dir))
+
