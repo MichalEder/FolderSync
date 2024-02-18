@@ -42,6 +42,7 @@ class TestItemHandler(unittest.TestCase):
         self.assertEqual(calculated_hash, expected_hash)
 
         os.unlink(temp_file.name)
+
     def test_file_modification(self):
         test_file = os.path.join(self.temp_source, "test.txt")
         replica_file = os.path.join(self.temp_replica, "test.txt")
@@ -59,3 +60,15 @@ class TestItemHandler(unittest.TestCase):
         replica_hash = self.synchronizer.get_item_list(self.temp_replica)[0].calculate_hash()
         self.assertEqual(source_hash, replica_hash)
 
+    def test_file_deletion(self):
+        test_file = os.path.join(self.temp_source, "test.txt")
+        replica_file = os.path.join(self.temp_replica, "test.txt")
+
+        with open(test_file, "w") as f:
+            f.write("Some content")
+        shutil.copy(test_file, replica_file)
+        os.remove(test_file)
+
+        self.synchronizer.synchronize()
+
+        self.assertFalse(os.path.exists(replica_file))
