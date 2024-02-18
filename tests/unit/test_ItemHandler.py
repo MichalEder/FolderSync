@@ -72,6 +72,7 @@ class TestItemHandler(unittest.TestCase):
         self.synchronizer.synchronize()
 
         self.assertFalse(os.path.exists(replica_file))
+
     def test_directory_creation(self):
         test_dir = os.path.join(self.temp_source, "new_dir")
         replica_dir = os.path.join(self.temp_replica, "new_dir")
@@ -82,3 +83,15 @@ class TestItemHandler(unittest.TestCase):
 
         self.assertTrue(os.path.exists(replica_dir))
 
+    def test_directory_deletion(self):
+        test_dir = os.path.join(self.temp_source, "new_dir")
+        replica_dir = os.path.join(self.temp_replica, "new_dir")
+
+        os.mkdir(test_dir)
+        os.mkdir(replica_dir)
+
+        shutil.rmtree(test_dir)
+
+        self.synchronizer.synchronize()
+
+        self.assertFalse(os.path.exists(replica_dir))
