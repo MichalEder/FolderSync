@@ -36,16 +36,14 @@ python FolderSync.py <source_folder_path> <replica_folder_path> <log_file_path> 
 **Arguments**
 
 <source_folder_path>: The absolute path to the source folder you want to synchronize.
+
 <replica_folder_path>: The absolute path to the replica folder.
+
 <log_file_path>: The absolute path where the synchronization log should be saved.
+
 -i <interval>: (Optional) The synchronization interval in seconds (defaults to 60 seconds).
 
 
-This will:
-
-Synchronize the /home/user/Documents folder with /home/user/Backup/Documents.
-Log synchronization actions to /home/user/sync.log.
-Run the synchronization every 300 seconds (5 minutes).
 Important Notes
 
 The replica folder will be overwritten to mirror the source folder's current state.
