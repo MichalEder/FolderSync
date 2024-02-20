@@ -2,7 +2,7 @@ import unittest
 import tempfile
 import shutil
 import os
-from FolderSync import ItemSynchronizer
+from folder_sync import ItemSynchronizer
 
 
 class TestItemSynchronizer(unittest.TestCase):

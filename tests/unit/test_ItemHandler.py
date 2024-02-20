@@ -3,7 +3,7 @@ import tempfile
 import shutil
 import hashlib
 import os
-from FolderSync import ItemSynchronizer, ItemHandler
+from folder_sync import ItemSynchronizer, ItemHandler
 
 
 class TestItemHandler(unittest.TestCase):
