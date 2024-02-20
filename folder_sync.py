@@ -106,7 +106,6 @@ class ItemSynchronizer:
         """
         Performs a synchronization between the source and replica folders.
         """
-        # Define source and replica files with file list of replica and source folder
         source_items: List[ItemHandler] = self.get_item_list(self.source_folder)
         replica_items: List[ItemHandler] = self.get_item_list(self.replica_folder)
 
