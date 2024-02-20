@@ -31,7 +31,7 @@ Install Requirements: The script uses the hashlib, shutil, os, argparse, and typ
 
 Execute the Script:
 
-python FolderSync.py <source_folder_path> <replica_folder_path> <log_file_path> -i <interval>
+python folder_sync.py <source_folder_path> <replica_folder_path> <log_file_path> -i <interval>
 
 **Arguments**
 
