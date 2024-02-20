@@ -29,6 +29,7 @@ class ItemHandler:
             The MD5 hash as a hexadecimal string, or an empty string if an error occurs.
         """
         try:
+            # Calculate hash of file
             md5_hash = hashlib.md5()
             with open(self.item_full_path, 'rb') as f:
                 for chunk in iter(lambda: f.read(4096), b''):
@@ -105,6 +106,7 @@ class ItemSynchronizer:
         """
         Performs a synchronization between the source and replica folders.
         """
+        # Define source and replica files with file list of replica and source folder
         source_items: List[ItemHandler] = self.get_item_list(self.source_folder)
         replica_items: List[ItemHandler] = self.get_item_list(self.replica_folder)
 
@@ -144,10 +146,10 @@ class ItemSynchronizer:
             source_items: A list of ItemHandler objects from the source folder.
             replica_items: A list of ItemHandler objects from the replica folder.
         """
-        replica_item_paths: Set[str] = {item.item_rel_path for item in replica_items}
+        replica_item_names: Set[str] = {item.item_rel_path for item in replica_items}
 
         for item in source_items:
-            if item.item_rel_path not in replica_item_paths:
+            if item.item_rel_path not in replica_item_names:
                 if os.path.isfile(item.item_full_path):
                     replica_destination = os.path.join(self.replica_folder, item.item_rel_path)
                     item.copy_file(replica_destination)
@@ -166,7 +168,6 @@ class ItemSynchronizer:
             replica_items: A list of ItemHandler objects from the replica folder.
         """
         source_items_paths: Set[str] = {item.item_rel_path for item in source_items}
-
         for item in replica_items:
             if item.item_rel_path not in source_items_paths:
                 replica_destination = os.path.join(self.replica_folder, item.item_rel_path)
