@@ -27,7 +27,7 @@ Logs synchronization actions to a specified log file.
 
 **Usage**
 
-Install Requirements: The script uses the hashlib, shutil, os, argparse, and typing modules. If you don't have them, install them using pip: pip install hashlib shutil os argparse typing
+Install Requirements: The script uses the hashlib, shutil, os, argparse, and typing modules. All modules are part of Python standard library. If you don't have them, install them using pip: pip install hashlib shutil os argparse typing
 
 Execute the Script:
 
